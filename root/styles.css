@@ -5,7 +5,62 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5; /* Светло-серый фон для уменьшения контраста */
+  /* Удален серый фон, установлен светло-белый фон с градиентом */
+  background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+}
+
+/* Стили для хедера */
+.header {
+  background-color: transparent; /* Прозрачный фон, чтобы показать градиент */
+  padding: 0;
+}
+
+.header-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center; /* Вертикальное центрирование элементов */
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333333;
+  /* Отступ от левого края */
+  margin-left: 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Отступ от правого края */
+}
+
+.header-right select {
+  padding: 8px 12px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #333333;
+  /* Единообразный стиль с остальными элементами */
+}
+
+.header-right select:focus {
+  outline: none;
+  border-color: #888888;
+}
+
+.header-right select option {
+  background-color: #ffffff;
+  color: #333333;
 }
 
 h1, h2, h3 {
@@ -13,20 +68,23 @@ h1, h2, h3 {
   font-weight: normal;
 }
 
+/* Контейнер */
 .container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 20px auto 40px auto;
   padding: 40px 20px;
-  text-align: center; /* Центрирование текста */
   background-color: #ffffff; /* Белый фон для контейнера */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для выделения контейнера */
-  border-radius: 8px; /* Скругление углов контейнера */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
+/* Остальные стили остаются без изменений */
+
+/* Поля формы */
 form {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Центрирование элементов формы */
+  align-items: center;
 }
 
 form div {
@@ -39,41 +97,41 @@ label {
   display: block;
   margin-bottom: 5px;
   text-align: left;
-  color: #555555; /* Средне-серый цвет для текста */
+  color: #555555;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #cccccc; /* Светло-серый цвет границы */
-  border-radius: 4px; /* Небольшое скругление углов для инпутов */
-  background-color: #fafafa;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #ffffff;
   font-size: 16px;
   color: #333333;
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
-  border-color: #888888; /* Более темный цвет границы при фокусе */
+  border-color: #888888;
 }
 
 button {
   padding: 12px 24px;
-  background-color: #4CAF50; /* Мягкий зеленый цвет кнопки */
+  background-color: #4CAF50;
   color: #ffffff;
   border: none;
-  border-radius: 4px; /* Скругление углов кнопки */
+  border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
   margin-top: 20px;
 }
 
 button:hover {
-  background-color: #45a049; /* Темный оттенок зеленого при наведении */
+  background-color: #45a049;
 }
 
 .error {
-  color: #e74c3c; /* Мягкий красный цвет для ошибок */
+  color: #e74c3c;
   margin-top: 20px;
 }
 
@@ -84,22 +142,22 @@ table {
 }
 
 table th, table td {
-  border: 1px solid #dddddd; /* Светло-серая граница таблицы */
+  border: 1px solid #dddddd;
   padding: 12px;
   text-align: center;
 }
 
 table th {
-  background-color: #f9f9f9; /* Очень светлый фон для заголовков таблицы */
+  background-color: #f9f9f9;
   color: #555555;
 }
 
 table tr:nth-child(even) {
-  background-color: #f2f2f2; /* Чередование цвета строк таблицы */
+  background-color: #f2f2f2;
 }
 
 pre {
-  text-align: left; /* Выравнивание текста для детальных расчетов */
+  text-align: left;
   background-color: #fafafa;
   padding: 15px;
   border-radius: 4px;
@@ -113,12 +171,22 @@ h2 {
   margin-top: 40px;
 }
 
+/* Адаптивность */
 @media (max-width: 600px) {
-  .container {
+  .header-inner, .container {
     padding: 20px 10px;
   }
 
   form div, input, button {
     max-width: 100%;
+  }
+
+  .header-left h1 {
+    font-size: 20px;
+    margin-left: 10px;
+  }
+
+  .header-right {
+    margin-right: 10px;
   }
 }

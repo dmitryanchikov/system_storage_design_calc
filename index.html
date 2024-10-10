@@ -33,11 +33,11 @@
         </div>
         <div>
           <label>{{ t('capacity') }}:</label>
-          <input type="number" v-model.number="formData.capacity" required />
+          <input type="number" step="0.001" v-model.number="formData.capacity" required />
         </div>
         <div>
           <label>{{ t('throughput') }}:</label>
-          <input type="number" v-model.number="formData.throughput" required />
+          <input type="number" step="0.001" v-model.number="formData.throughput" required />
         </div>
 
         <h2>{{ t('section2Title') }}</h2>
@@ -88,7 +88,7 @@
           </div>
           <div>
             <label>{{ t('diskThroughput') }}:</label>
-            <input type="number" v-model.number="disk.throughput" required />
+            <input type="number" step="0.001" v-model.number="disk.throughput" required />
           </div>
           <div>
             <label>{{ t('diskPrice') }}:</label>
@@ -116,7 +116,7 @@
       <!-- Детальные расчеты -->
       <div v-if="detailedCalculations.length > 0">
         <h2>{{ t('detailedCalculations') }}</h2>
-        <pre>{{ detailedCalculations.join('\n') }}</pre>
+        <pre v-html="detailedCalculations.join('\n')"></pre>
       </div>
 
       <!-- Результаты расчета -->

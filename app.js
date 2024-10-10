@@ -294,28 +294,29 @@ new Vue({
 
         const totalDisks = Math.max(countByCapacity, countByIOPS, countByThroughput);
 
+        const countByCapacityLabel = totalDisks === countByCapacity ? `<b>${countByCapacity}</b>`: countByCapacity;
+        const countByIOPSLabel = totalDisks === countByIOPS ? `<b>${countByIOPS}</b>` : countByIOPS;
+        const countByThroughputLabel = totalDisks === countByThroughput ? `<b>${countByThroughput}</b>` : countByThroughput;
+
         const replicatedDisks = totalDisks * replicationFactor;
-        const cost = replicatedDisks * diskParameters[diskType].price;
-
         finalCounts[diskType] = replicatedDisks * (1 + reserveRatio / 100);
+        const cost = finalCounts[diskType].toFixed(0) * diskParameters[diskType].price;
+
 
         this.detailedCalculations.push(
-          `${this.t('countByCapacity')}: ${capacities[diskType].toFixed(2)} ${this.t('tb')} / ${diskCapacity} ${this.t('tb')} = ${countByCapacity} ${this.t('disks')}`
+          `${this.t('countByCapacity')}: ${capacities[diskType].toFixed(2)} ${this.t('tb')} / ${diskCapacity} ${this.t('tb')} = ${countByCapacityLabel} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
-          `${this.t('countByIOPS')}: ${iopsLoad[diskType].toFixed(0)} IOPS / ${diskIOPS} IOPS = ${countByIOPS} ${this.t('disks')}`
+          `${this.t('countByIOPS')}: ${iopsLoad[diskType].toFixed(0)} IOPS / ${diskIOPS} IOPS = ${countByIOPSLabel} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
-          `${this.t('countByThroughput')}: ${throughputLoad[diskType].toFixed(2)} ${this.t('gbs')} / ${diskThroughputGB} ${this.t('gbs')} = ${countByThroughput} ${this.t('disks')}`
+          `${this.t('countByThroughput')}: ${throughputLoad[diskType].toFixed(2)} ${this.t('gbs')} / ${diskThroughputGB} ${this.t('gbs')} = ${countByThroughputLabel} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
-          `${this.t('totalDisks')} (${this.t('maxOfAbove')}): max(${countByCapacity}, ${countByIOPS}, ${countByThroughput}) = ${totalDisks} ${this.t('disks')}`
+          `${this.t('totalDisks')} (${this.t('maxOfAbove')}): max(${countByCapacity}, ${countByIOPS}, ${countByThroughput}) = <b>${totalDisks}</b> ${this.t('disks')}`
         );
         this.detailedCalculations.push(
           `${this.t('replicatedDisks')} + ${reserveRatio}%: ${totalDisks} * ${replicationFactor} + ${reserveRatio}% = ${finalCounts[diskType].toFixed(0)} ${this.t('disks')}`
-        );
-        this.detailedCalculations.push(
-          `${this.t('replicatedDisks')}: ${totalDisks} * ${replicationFactor} = ${replicatedDisks} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
           `${this.t('costFor')} ${this.diskNames[diskType]}: ${replicatedDisks} ${this.t('disks')} * ${diskParameters[diskType].price} \$ = ${cost.toFixed(2)} \$`

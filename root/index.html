@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Калькулятор хранилища</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Подключение Vue.js через CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>Калькулятор конфигурации хранилища</h1>
+    <form @submit.prevent="submitForm">
+      <h2>1. Входные параметры</h2>
+      <div>
+        <label>RPS (запросов в секунду):</label>
+        <input type="number" v-model.number="formData.rps" required />
+      </div>
+      <div>
+        <label>Общий объем данных (ТБ):</label>
+        <input type="number" v-model.number="formData.capacity" required />
+      </div>
+      <div>
+        <label>Пропускная способность (ГБ/с):</label>
+        <input type="number" v-model.number="formData.throughput" required />
+      </div>
+
+      <h2>2. Распределение емкости (%)</h2>
+      <div>
+        <label>SSD NVMe:</label>
+        <input type="number" v-model.number="formData.capacityDistribution.ssdNVMe" required />
+      </div>
+      <div>
+        <label>SSD SATA:</label>
+        <input type="number" v-model.number="formData.capacityDistribution.ssdSATA" required />
+      </div>
+      <div>
+        <label>HDD:</label>
+        <input type="number" v-model.number="formData.capacityDistribution.hdd" required />
+      </div>
+      <div>
+        <strong>Сумма: {{ capacitySum }}%</strong>
+      </div>
+
+      <h2>3. Распределение нагрузки (%)</h2>
+      <div>
+        <label>SSD NVMe:</label>
+        <input type="number" v-model.number="formData.loadDistribution.ssdNVMe" required />
+      </div>
+      <div>
+        <label>SSD SATA:</label>
+        <input type="number" v-model.number="formData.loadDistribution.ssdSATA" required />
+      </div>
+      <div>
+        <label>HDD:</label>
+        <input type="number" v-model.number="formData.loadDistribution.hdd" required />
+      </div>
+      <div>
+        <strong>Сумма: {{ loadSum }}%</strong>
+      </div>
+
+      <h2>4. Параметры дисков</h2>
+      <!-- Параметры для каждого типа диска -->
+      <div v-for="(disk, key) in formData.diskParameters" :key="key">
+        <h3>{{ diskNames[key] }}</h3>
+        <div>
+          <label>Емкость диска (ТБ):</label>
+          <input type="number" v-model.number="disk.capacity" required />
+        </div>
+        <div>
+          <label>IOPS:</label>
+          <input type="number" v-model.number="disk.iops" required />
+        </div>
+        <div>
+          <label>Пропускная способность (МБ/с):</label>
+          <input type="number" v-model.number="disk.throughput" required />
+        </div>
+        <div>
+          <label>Стоимость (\$):</label>
+          <input type="number" v-model.number="disk.price" required />
+        </div>
+      </div>
+
+      <h2>5. Коэффициент репликации</h2>
+      <div>
+        <label>Replication Factor:</label>
+        <input type="number" v-model.number="formData.replicationFactor" required />
+      </div>
+
+      <button type="submit">Рассчитать</button>
+    </form>
+
+    <div v-if="error" class="error">
+      <p>{{ error }}</p>
+    </div>
+
+    <div v-if="results">
+      <h2>Результаты расчета</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th v-for="disk in results.disks">{{ diskNames[disk.diskType] }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Объем данных (ТБ)</td>
+            <td v-for="disk in results.disks">{{ disk.capacity.toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <td>Нагрузка IOPS</td>
+            <td v-for="disk in results.disks">{{ disk.iopsLoad.toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <td>Нагрузка Throughput (ГБ/с)</td>
+            <td v-for="disk in results.disks">{{ disk.throughputLoad.toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <td>Кол-во дисков по емкости</td>
+            <td v-for="disk in results.disks">{{ disk.countByCapacity }}</td>
+          </tr>
+          <tr>
+            <td>Кол-во дисков по Throughput</td>
+            <td v-for="disk in results.disks">{{ disk.countByThroughput }}</td>
+          </tr>
+          <tr>
+            <td>Кол-во дисков по IOPS</td>
+            <td v-for="disk in results.disks">{{ disk.countByIOPS }}</td>
+          </tr>
+          <tr>
+            <td>Итоговое кол-во дисков</td>
+            <td v-for="disk in results.disks">{{ disk.totalDisks }}</td>
+          </tr>
+          <tr>
+            <td>Кол-во дисков с репликацией</td>
+            <td v-for="disk in results.disks">{{ disk.replicatedDisks }}</td>
+          </tr>
+          <tr>
+            <td>Стоимость (\$)</td>
+            <td v-for="disk in results.disks">{{ disk.cost.toFixed(2) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Общая стоимость: ${{ results.totalCost.toFixed(2) }}</h3>
+      <h3>Общее количество дисков с репликацией: {{ results.totalReplicatedDisks }}</h3>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

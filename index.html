@@ -101,6 +101,10 @@
           <label>{{ t('replicationFactor') }}:</label>
           <input type="number" v-model.number="formData.replicationFactor" required />
         </div>
+        <div>
+          <label>{{ t('reserveRatio') }}:</label>
+          <input type="number" v-model.number="formData.reserveRatio" required />
+        </div>
 
         <button type="submit">{{ t('calculate') }}</button>
       </form>

@@ -11,46 +11,48 @@ new Vue({
         calculationsFor: 'Расчет для',
         totalDataVolume: 'Общий объем данных',
         totalIOPS: 'Общий IOPS',
+        totalThroughput: 'Общий трафик',
         maxOfAbove: 'максимум из вышеуказанных',
         costFor: 'Стоимость для',
         appTitle: 'Калькулятор ресурсов распределенного хранилища',
         section1Title: '1. Входные параметры',
         rps: 'RPS (запросов в секунду)',
-        capacity: 'Общий объем данных (ТБ)',
-        throughput: 'Пропускная способность (ГБ/с)',
-        section2Title: '2. Распределение емкости (%)',
+        capacity: 'Общий объем данных, ТБ',
+        throughput: 'Пропускная способность, ГБ/с',
+        section2Title: '2. Распределение емкости, %',
         ssdNVMe: 'SSD NVMe',
         ssdSATA: 'SSD SATA',
         hdd: 'HDD',
         sum: 'Сумма',
         tb: 'ТБ',
         gbs: 'ГБ/с',
-        section3Title: '3. Распределение нагрузки (%)',
+        section3Title: '3. Распределение нагрузки, %',
         section4Title: '4. Параметры дисков',
         diskCapacity: 'Емкость диска (ТБ)',
         diskIOPS: 'IOPS',
-        diskThroughput: 'Пропускная способность (МБ/с)',
-        diskPrice: 'Стоимость ($)',
+        diskThroughput: 'Пропускная способность, МБ/с',
+        diskPrice: 'Стоимость, $',
         section5Title: '5. Коэффициент репликации',
         replicationFactor: 'Replication Factor',
         calculate: 'Рассчитать',
         detailedCalculations: 'Детальные расчеты',
         calculationResults: 'Результаты расчета',
         parameter: 'Параметр',
-        dataVolume: 'Объем данных (ТБ)',
+        dataVolume: 'Объем данных, ТБ',
         iopsLoad: 'Нагрузка IOPS',
-        throughputLoad: 'Нагрузка по трафику (ГБ/с)',
+        throughputLoad: 'Нагрузка по трафику, ГБ/с',
         countByCapacity: 'Кол-во дисков по емкости',
         countByThroughput: 'Кол-во дисков по трафику',
         countByIOPS: 'Кол-во дисков по IOPS',
         totalDisks: 'Итоговое кол-во дисков',
         replicatedDisks: 'Кол-во дисков с репликацией',
-        cost: 'Стоимость ($)',
+        cost: 'Стоимость, $',
         totalCost: 'Общая стоимость',
         totalReplicatedDisks: 'Общее количество дисков с репликацией',
         errorCapacitySum: 'Сумма процентов в распределении емкости должна быть равна 100%.',
         errorLoadSum: 'Сумма процентов в распределении нагрузки должна быть равна 100%.',
         errorExcludedDisk: 'Тип диска {disk} исключен из емкости, но имеет ненулевую нагрузку.',
+        reserveRatio: 'Коэффициент запаса ресурсов, %',
       },
       en: {
         language: 'Language',
@@ -58,35 +60,36 @@ new Vue({
         calculationsFor: 'Calculations for',
         totalDataVolume: 'Total Data Volume',
         totalIOPS: 'Total IOPS',
+        totalThroughput: 'Total Throughput',
         maxOfAbove: 'maximum of the above',
         costFor: 'Cost for',
         appTitle: 'Distributed Storage Resource Calculator',
         section1Title: '1. Input Parameters',
         rps: 'RPS (Requests Per Second)',
-        capacity: 'Total Data Volume (TB)',
-        throughput: 'Throughput (GB/s)',
-        section2Title: '2. Capacity Distribution (%)',
+        capacity: 'Total Data Volume, TB',
+        throughput: 'Throughput, GB/s',
+        section2Title: '2. Capacity Distribution, %',
         ssdNVMe: 'SSD NVMe',
         ssdSATA: 'SSD SATA',
         hdd: 'HDD',
         sum: 'Sum',
         tb: 'TB',
         gbs: 'GB/s',
-        section3Title: '3. Load Distribution (%)',
+        section3Title: '3. Load Distribution, %',
         section4Title: '4. Disk Parameters',
-        diskCapacity: 'Disk Capacity (TB)',
+        diskCapacity: 'Disk Capacity, TB',
         diskIOPS: 'IOPS',
-        diskThroughput: 'Throughput (MB/s)',
-        diskPrice: 'Price ($)',
+        diskThroughput: 'Throughput, MB/s',
+        diskPrice: 'Price, $',
         section5Title: '5. Replication Factor',
         replicationFactor: 'Replication Factor',
         calculate: 'Calculate',
         detailedCalculations: 'Detailed Calculations',
         calculationResults: 'Calculation Results',
         parameter: 'Parameter',
-        dataVolume: 'Data Volume (TB)',
+        dataVolume: 'Data Volume, TB',
         iopsLoad: 'IOPS Load',
-        throughputLoad: 'Throughput Load (GB/s)',
+        throughputLoad: 'Throughput Load, GB/s',
         countByCapacity: 'Disks by Capacity',
         countByThroughput: 'Disks by Throughput',
         countByIOPS: 'Disks by IOPS',
@@ -98,6 +101,7 @@ new Vue({
         errorCapacitySum: 'The sum of capacity distribution percentages must be 100%.',
         errorLoadSum: 'The sum of load distribution percentages must be 100%.',
         errorExcludedDisk: 'Disk type {disk} is excluded from capacity but has non-zero load.',
+        reserveRatio: 'Resource Reserve ratio, %'
       },
     },
     formData: {
@@ -135,6 +139,7 @@ new Vue({
         },
       },
       replicationFactor: 3,
+      reserveRatio: 15,
     },
     results: null,
     error: null,
@@ -234,49 +239,51 @@ new Vue({
         loadDistribution,
         diskParameters,
         replicationFactor,
+        reserveRatio,
       } = this.formData;
 
       // Инициализация детальных расчетов
       this.detailedCalculations = [];
 
-      // Общий объем данных
-      this.detailedCalculations.push(`${this.t('totalDataVolume')}: ${capacity} ${this.t('tb')}`);
-
-      // Расчет объема данных для каждого типа диска
       const capacities = {};
-      ['ssdNVMe', 'ssdSATA', 'hdd'].forEach((diskType) => {
-        const percent = capacityDistribution[diskType];
-        capacities[diskType] = (capacity * percent) / 100;
-        if (percent > 0) {
-          this.detailedCalculations.push(
-            `${this.t('dataVolume')} (${this.diskNames[diskType]}): ${capacity} ${this.t('tb')} * ${percent}% = ${capacities[diskType].toFixed(2)} ${this.t('tb')}`
-          );
-        }
-      });
-
-      // Общий IOPS
-      const totalIOPS = rps;
-      this.detailedCalculations.push(`\n${this.t('totalIOPS')}: ${totalIOPS} IOPS`);
-
       const iopsLoad = {};
       const throughputLoad = {};
+      const finalCounts = {};
 
-      ['ssdNVMe', 'ssdSATA', 'hdd'].forEach((diskType) => {
-        const percent = loadDistribution[diskType];
-        iopsLoad[diskType] = (totalIOPS * percent) / 100;
-        throughputLoad[diskType] = (throughput * percent) / 100;
-        if (percent > 0) {
-          this.detailedCalculations.push(
-            `${this.t('iopsLoad')} (${this.diskNames[diskType]}): ${totalIOPS} IOPS * ${percent}% = ${iopsLoad[diskType].toFixed(2)} IOPS`
-          );
-          this.detailedCalculations.push(
-            `${this.t('throughputLoad')} (${this.diskNames[diskType]}): ${throughput} ${this.t('gbs')} * ${percent}% = ${throughputLoad[diskType].toFixed(2)} ${this.t('gbs')}`
-          );
-        }
-      });
+      // Общий объем данных
+      this.detailedCalculations.push(`${this.t('totalDataVolume')}: ${capacity} ${this.t('tb')}`);
+      // Общий IOPS
+      this.detailedCalculations.push(`\n${this.t('totalIOPS')}: ${rps} IOPS`);
+      // Общий трафик
+      this.detailedCalculations.push(`\n${this.t('totalThroughput')}: ${throughput} ${this.t('gbs')}`);
+
 
       // Функция для расчета количества дисков
       const calculateDiskCount = (diskType) => {
+        // Детальные расчеты для текущего типа диска
+        this.detailedCalculations.push(`\n${this.t('calculationsFor')} ${this.diskNames[diskType]}:`);
+
+        // Расчет объема данных для каждого типа диска
+        const capacityPercent = capacityDistribution[diskType];
+        capacities[diskType] = (capacity * capacityPercent) / 100;
+        if (capacityPercent > 0) {
+          this.detailedCalculations.push(
+            `${this.t('dataVolume')} (${this.diskNames[diskType]}): ${capacity} ${this.t('tb')} * ${capacityPercent}% = ${capacities[diskType].toFixed(2)} ${this.t('tb')}`
+          );
+        }
+
+        const loadPercent = loadDistribution[diskType];
+        iopsLoad[diskType] = (rps * loadPercent) / 100;
+        throughputLoad[diskType] = (throughput * loadPercent) / 100;
+        if (loadPercent > 0) {
+          this.detailedCalculations.push(
+            `${this.t('iopsLoad')} (${this.diskNames[diskType]}): ${rps} IOPS * ${loadPercent}% = ${iopsLoad[diskType].toFixed(2)} IOPS`
+          );
+          this.detailedCalculations.push(
+            `${this.t('throughputLoad')} (${this.diskNames[diskType]}): ${throughput} ${this.t('gbs')} * ${loadPercent}% = ${throughputLoad[diskType].toFixed(2)} ${this.t('gbs')}`
+          );
+        }
+
         const diskCapacity = diskParameters[diskType].capacity;
         const diskIOPS = diskParameters[diskType].iops;
         const diskThroughputGB = diskParameters[diskType].throughput / 1000;
@@ -290,19 +297,22 @@ new Vue({
         const replicatedDisks = totalDisks * replicationFactor;
         const cost = replicatedDisks * diskParameters[diskType].price;
 
-        // Детальные расчеты для текущего типа диска
-        this.detailedCalculations.push(`\n${this.t('calculationsFor')} ${this.diskNames[diskType]}:`);
+        finalCounts[diskType] = replicatedDisks * (1 + reserveRatio / 100);
+
         this.detailedCalculations.push(
           `${this.t('countByCapacity')}: ${capacities[diskType].toFixed(2)} ${this.t('tb')} / ${diskCapacity} ${this.t('tb')} = ${countByCapacity} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
-          `${this.t('countByIOPS')}: ${iopsLoad[diskType].toFixed(2)} IOPS / ${diskIOPS} IOPS = ${countByIOPS} ${this.t('disks')}`
+          `${this.t('countByIOPS')}: ${iopsLoad[diskType].toFixed(0)} IOPS / ${diskIOPS} IOPS = ${countByIOPS} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
           `${this.t('countByThroughput')}: ${throughputLoad[diskType].toFixed(2)} ${this.t('gbs')} / ${diskThroughputGB} ${this.t('gbs')} = ${countByThroughput} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
           `${this.t('totalDisks')} (${this.t('maxOfAbove')}): max(${countByCapacity}, ${countByIOPS}, ${countByThroughput}) = ${totalDisks} ${this.t('disks')}`
+        );
+        this.detailedCalculations.push(
+          `${this.t('replicatedDisks')} + ${reserveRatio}%: ${totalDisks} * ${replicationFactor} + ${reserveRatio}% = ${finalCounts[diskType].toFixed(0)} ${this.t('disks')}`
         );
         this.detailedCalculations.push(
           `${this.t('replicatedDisks')}: ${totalDisks} * ${replicationFactor} = ${replicatedDisks} ${this.t('disks')}`
@@ -342,6 +352,9 @@ new Vue({
 
       this.detailedCalculations.push(`\n${this.t('totalCost')}: ${totalCost.toFixed(2)} \$`);
       this.detailedCalculations.push(`${this.t('totalReplicatedDisks')}: ${totalReplicatedDisks} ${this.t('disks')}`);
+      ['ssdNVMe', 'ssdSATA', 'hdd'].forEach((diskType) => {
+        this.detailedCalculations.push(`${this.diskNames[diskType]} ${diskParameters[diskType].capacity} ${this.t('tb')}: ${finalCounts[diskType].toFixed(0)}`);
+      });
 
       return {
         disks: results,

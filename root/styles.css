@@ -1,47 +1,124 @@
+/* styles.css */
+
+/* Общие стили */
 body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5; /* Светло-серый фон для уменьшения контраста */
 }
 
 h1, h2, h3 {
-  color: #333;
+  color: #333333; /* Темно-серый цвет для заголовков */
+  font-weight: normal;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center; /* Центрирование текста */
+  background-color: #ffffff; /* Белый фон для контейнера */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для выделения контейнера */
+  border-radius: 8px; /* Скругление углов контейнера */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрирование элементов формы */
 }
 
 form div {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 500px;
 }
 
 label {
-  display: inline-block;
-  width: 200px;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+  color: #555555; /* Средне-серый цвет для текста */
 }
 
 input {
-  padding: 5px;
-  width: 200px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cccccc; /* Светло-серый цвет границы */
+  border-radius: 4px; /* Небольшое скругление углов для инпутов */
+  background-color: #fafafa;
+  font-size: 16px;
+  color: #333333;
+}
+
+input:focus {
+  outline: none;
+  border-color: #888888; /* Более темный цвет границы при фокусе */
 }
 
 button {
-  padding: 10px 20px;
+  padding: 12px 24px;
+  background-color: #4CAF50; /* Мягкий зеленый цвет кнопки */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px; /* Скругление углов кнопки */
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049; /* Темный оттенок зеленого при наведении */
 }
 
 .error {
-  color: red;
+  color: #e74c3c; /* Мягкий красный цвет для ошибок */
   margin-top: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 table th, table td {
-  border: 1px solid #ccc;
-  padding: 5px;
+  border: 1px solid #dddddd; /* Светло-серая граница таблицы */
+  padding: 12px;
   text-align: center;
 }
 
 table th {
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Очень светлый фон для заголовков таблицы */
+  color: #555555;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Чередование цвета строк таблицы */
+}
+
+pre {
+  text-align: left; /* Выравнивание текста для детальных расчетов */
+  background-color: #fafafa;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  max-width: 100%;
+  color: #333333;
+  border: 1px solid #dddddd;
+}
+
+h2 {
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 10px;
+  }
+
+  form div, input, button {
+    max-width: 100%;
+  }
 }

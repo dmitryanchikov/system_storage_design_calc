@@ -9,92 +9,99 @@
 </head>
 <body>
   <div id="app">
-    <h1>Калькулятор конфигурации хранилища</h1>
-    <form @submit.prevent="submitForm">
-      <h2>1. Входные параметры</h2>
-      <div>
-        <label>RPS (запросов в секунду):</label>
-        <input type="number" v-model.number="formData.rps" required />
-      </div>
-      <div>
-        <label>Общий объем данных (ТБ):</label>
-        <input type="number" v-model.number="formData.capacity" required />
-      </div>
-      <div>
-        <label>Пропускная способность (ГБ/с):</label>
-        <input type="number" v-model.number="formData.throughput" required />
-      </div>
-
-      <h2>2. Распределение емкости (%)</h2>
-      <div>
-        <label>SSD NVMe:</label>
-        <input type="number" v-model.number="formData.capacityDistribution.ssdNVMe" required />
-      </div>
-      <div>
-        <label>SSD SATA:</label>
-        <input type="number" v-model.number="formData.capacityDistribution.ssdSATA" required />
-      </div>
-      <div>
-        <label>HDD:</label>
-        <input type="number" v-model.number="formData.capacityDistribution.hdd" required />
-      </div>
-      <div>
-        <strong>Сумма: {{ capacitySum }}%</strong>
-      </div>
-
-      <h2>3. Распределение нагрузки (%)</h2>
-      <div>
-        <label>SSD NVMe:</label>
-        <input type="number" v-model.number="formData.loadDistribution.ssdNVMe" required />
-      </div>
-      <div>
-        <label>SSD SATA:</label>
-        <input type="number" v-model.number="formData.loadDistribution.ssdSATA" required />
-      </div>
-      <div>
-        <label>HDD:</label>
-        <input type="number" v-model.number="formData.loadDistribution.hdd" required />
-      </div>
-      <div>
-        <strong>Сумма: {{ loadSum }}%</strong>
-      </div>
-
-      <h2>4. Параметры дисков</h2>
-      <!-- Параметры для каждого типа диска -->
-      <div v-for="(disk, key) in formData.diskParameters" :key="key">
-        <h3>{{ diskNames[key] }}</h3>
+    <div class="container">
+      <h1>Калькулятор конфигурации хранилища</h1>
+      <form @submit.prevent="submitForm">
+        <h2>1. Входные параметры</h2>
         <div>
-          <label>Емкость диска (ТБ):</label>
-          <input type="number" v-model.number="disk.capacity" required />
+          <label>RPS (запросов в секунду):</label>
+          <input type="number" v-model.number="formData.rps" required />
         </div>
         <div>
-          <label>IOPS:</label>
-          <input type="number" v-model.number="disk.iops" required />
+          <label>Общий объем данных (ТБ):</label>
+          <input type="number" v-model.number="formData.capacity" required />
         </div>
         <div>
-          <label>Пропускная способность (МБ/с):</label>
-          <input type="number" v-model.number="disk.throughput" required />
+          <label>Пропускная способность (ГБ/с):</label>
+          <input type="number" v-model.number="formData.throughput" required />
+        </div>
+
+        <h2>2. Распределение емкости (%)</h2>
+        <div>
+          <label>SSD NVMe:</label>
+          <input type="number" v-model.number="formData.capacityDistribution.ssdNVMe" required />
         </div>
         <div>
-          <label>Стоимость (\$):</label>
-          <input type="number" v-model.number="disk.price" required />
+          <label>SSD SATA:</label>
+          <input type="number" v-model.number="formData.capacityDistribution.ssdSATA" required />
         </div>
+        <div>
+          <label>HDD:</label>
+          <input type="number" v-model.number="formData.capacityDistribution.hdd" required />
+        </div>
+        <div>
+          <strong>Сумма: {{ capacitySum }}%</strong>
+        </div>
+
+        <h2>3. Распределение нагрузки (%)</h2>
+        <div>
+          <label>SSD NVMe:</label>
+          <input type="number" v-model.number="formData.loadDistribution.ssdNVMe" required />
+        </div>
+        <div>
+          <label>SSD SATA:</label>
+          <input type="number" v-model.number="formData.loadDistribution.ssdSATA" required />
+        </div>
+        <div>
+          <label>HDD:</label>
+          <input type="number" v-model.number="formData.loadDistribution.hdd" required />
+        </div>
+        <div>
+          <strong>Сумма: {{ loadSum }}%</strong>
+        </div>
+
+        <h2>4. Параметры дисков</h2>
+        <!-- Параметры для каждого типа диска -->
+        <div v-for="(disk, key) in formData.diskParameters" :key="key">
+          <h3>{{ diskNames[key] }}</h3>
+          <div>
+            <label>Емкость диска (ТБ):</label>
+            <input type="number" v-model.number="disk.capacity" required />
+          </div>
+          <div>
+            <label>IOPS:</label>
+            <input type="number" v-model.number="disk.iops" required />
+          </div>
+          <div>
+            <label>Пропускная способность (МБ/с):</label>
+            <input type="number" v-model.number="disk.throughput" required />
+          </div>
+          <div>
+            <label>Стоимость (\$):</label>
+            <input type="number" v-model.number="disk.price" required />
+          </div>
+        </div>
+
+        <h2>5. Коэффициент репликации</h2>
+        <div>
+          <label>Replication Factor:</label>
+          <input type="number" v-model.number="formData.replicationFactor" required />
+        </div>
+
+        <button type="submit">Рассчитать</button>
+      </form>
+
+      <div v-if="error" class="error">
+        <p>{{ error }}</p>
       </div>
 
-      <h2>5. Коэффициент репликации</h2>
-      <div>
-        <label>Replication Factor:</label>
-        <input type="number" v-model.number="formData.replicationFactor" required />
+      <!-- Добавленный блок для детальных расчетов -->
+      <div v-if="detailedCalculations.length > 0">
+        <h2>Детальные расчеты</h2>
+        <pre>{{ detailedCalculations.join('\n') }}</pre>
       </div>
 
-      <button type="submit">Рассчитать</button>
-    </form>
-
-    <div v-if="error" class="error">
-      <p>{{ error }}</p>
-    </div>
-
-    <div v-if="results">
+      <div v-if="results">
       <h2>Результаты расчета</h2>
       <table>
         <thead>
@@ -137,13 +144,14 @@
             <td v-for="disk in results.disks">{{ disk.replicatedDisks }}</td>
           </tr>
           <tr>
-            <td>Стоимость (\$)</td>
+            <td>Стоимость ($)</td>
             <td v-for="disk in results.disks">{{ disk.cost.toFixed(2) }}</td>
           </tr>
         </tbody>
       </table>
       <h3>Общая стоимость: ${{ results.totalCost.toFixed(2) }}</h3>
       <h3>Общее количество дисков с репликацией: {{ results.totalReplicatedDisks }}</h3>
+    </div>
     </div>
   </div>
 
